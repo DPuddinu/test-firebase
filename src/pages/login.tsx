@@ -1,19 +1,22 @@
 import { Button } from '@/components/ui/button';
-import { useLoginUser } from '@/hooks/useLoginUser';
+import { useLoginUser, useLogoutUser } from '@/hooks/useLoginUser';
 import { useRegisterUser } from '@/hooks/useRegisterUser';
+import { useUserStore } from '@/store/store';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const { data: registeredUser, mutate: register, isPending: isRegistering } = useRegisterUser();
-  const { data: loggedUser, mutate: login, isPending: isLogging } = useLoginUser();
+const LoginPage = () => {
   const navigate = useNavigate();
+  const { user } = useUserStore();
+  const { mutate: register, isPending: isRegistering } = useRegisterUser();
+  const { mutate: login, isPending: isLogging } = useLoginUser();
 
-  if (loggedUser || registeredUser) {
-    navigate('/dashboard');
-  }
+  useEffect(() => {
+    if (user) navigate('/dashboard');
+  }, [user]);
 
   return (
-    <div className='flex gap-2'>
+    <div className="bg-slate-800 text-white w-full flex gap-4 justify-center items-center grow">
       <Button
         onClick={() =>
           register({
@@ -38,4 +41,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
