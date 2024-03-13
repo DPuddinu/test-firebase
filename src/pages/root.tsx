@@ -1,21 +1,22 @@
 import { Button } from '@/components/ui/button';
+import { UserContext } from '@/components/ui/userProvider';
 import { auth } from '@/firebase';
 import { useLogoutUser } from '@/hooks/useLoginUser';
-import { useUserStore } from '@/store/store';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect } from 'react';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 function Root() {
-  const { login, logout, user } = useUserStore();
+  const [ user, setUser ] = useState<User |null>(null)
+  
   const { mutate } = useLogoutUser();
 
   useEffect(() => {
     const listener = onAuthStateChanged(auth, (user) => {
       if (user) {
-        login(user);
+        setUser(user);
       } else {
-        logout();
+        setUser(null);
       }
     });
     return () => {
@@ -32,8 +33,10 @@ function Root() {
           </Button>
         </nav>
       )}
-      <section className='p-2 grow flex flex-col'>
-        <Outlet />
+      <section className="p-2 grow flex flex-col">
+        <UserContext.Provider value={user}>
+          <Outlet />
+        </UserContext.Provider>
       </section>
     </main>
   );

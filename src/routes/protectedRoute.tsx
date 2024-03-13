@@ -1,9 +1,9 @@
-import { useUserStore } from '@/store/store';
-import { PropsWithChildren, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { UserContext } from '@/components/ui/userProvider';
+import { useContext } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
-  const { user } = useUserStore();
+  const user = useContext(UserContext);
   return user ? <Outlet /> : <Navigate to='/login' />;
 };
 
