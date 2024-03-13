@@ -1,13 +1,14 @@
 import { Button } from '@/components/ui/button';
-import { useLoginUser, useLogoutUser } from '@/hooks/useLoginUser';
+import { UserContext } from '@/components/ui/userProvider';
+import { useLoginUser } from '@/hooks/useLoginUser';
 import { useRegisterUser } from '@/hooks/useRegisterUser';
-import { useUserStore } from '@/store/store';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { user } = useUserStore();
+
+  const user = useContext(UserContext);
   const { mutate: register, isPending: isRegistering } = useRegisterUser();
   const { mutate: login, isPending: isLogging } = useLoginUser();
 
